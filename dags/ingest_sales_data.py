@@ -6,10 +6,11 @@ import os
 import json
 
 # Add src to sys.path to allow imports
-# Assuming standard Airflow layout where DAGs are in $AIRFLOW_HOME/dags
-# and src is in $AIRFLOW_HOME/dags/../src or mounted similarly.
-# Adjusting to the structure: repo/dags/.. -> repo/src
+# Support both:
+# 1. Dev structure: src is sibling of dags (..)
+# 2. Deploy structure: src is inside dags (.)
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.dirname(__file__))
 
 from src.extract.postgres_extractor import PostgresExtractor
 

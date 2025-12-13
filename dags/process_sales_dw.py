@@ -5,7 +5,9 @@ import sys
 import os
 
 # Add src to sys.path
+# Support both .. (sibling) and . (child)
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.dirname(__file__))
 
 from src.load.sqlserver_loader import SqlServerLoader
 
