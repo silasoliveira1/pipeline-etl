@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.env
+
+# Data Lake (Local)
+datalake/
+etl_watermark.json
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+
+# Docker volumes (if mapped locally, though we used named volumes)
+docker/postgres_data/
+docker/sqlserver_data/

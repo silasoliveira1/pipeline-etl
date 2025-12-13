@@ -1,0 +1,8 @@
+faker==24.0.0
+pg8000==1.30.5
+requests==2.31.0
+pandas==2.2.0
+sqlalchemy==2.0.28
+pyarrow==14.0.1
+python-tds==1.13.0
+pytest==8.0.0

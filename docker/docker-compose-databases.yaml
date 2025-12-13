@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # Source Database (Transactional System)
+  postgres_sales:
+    image: postgres:15
+    container_name: postgres_sales
+    environment:
+      POSTGRES_USER: sales_user
+      POSTGRES_PASSWORD: sales_password
+      POSTGRES_DB: sales_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_sales_data:/var/lib/postgresql/data
+      - ./sql/postgres:/docker-entrypoint-initdb.d
+    networks:
+      - etl_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U sales_user -d sales_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Destination Database (Data Warehouse)
+  sqlserver_etl:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver_etl
+    platform: linux/amd64 # Required for Apple Silicon
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "BigDataPassword123!"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_etl_data:/var/opt/mssql
+    networks:
+      - etl_network
+    cap_add:
+      - SYS_PTRACE
+
+networks:
+  etl_network:
+    name: airflow-docker_default
+    external: true
+
+volumes:
+  postgres_sales_data:
+  sqlserver_etl_data:
