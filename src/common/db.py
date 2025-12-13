@@ -41,6 +41,7 @@ def get_postgres_conn():
 import pytds
 
 def get_sqlserver_conn():
+    """
     Returns a connection to SQL Server DW using python-tds.
     """
     # Detect if running in Airflow (Docker) or Local
