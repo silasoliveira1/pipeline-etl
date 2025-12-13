@@ -7,7 +7,11 @@ def get_postgres_conn():
     Returns a pg8000 connection to the Postgres Source.
     Reads params from Env Vars or defaults.
     """
-    host = os.getenv("POSTGRES_HOST", "localhost")
+    # Detect if running in Airflow (Docker) or Local
+    is_airflow = os.getenv("AIRFLOW_HOME") is not None
+    default_host = "postgres_sales" if is_airflow else "localhost"
+    
+    host = os.getenv("POSTGRES_HOST", default_host)
     db = os.getenv("POSTGRES_DB", "sales_db")
     user = os.getenv("POSTGRES_USER", "sales_user")
     password = os.getenv("POSTGRES_PASSWORD", "sales_password")
@@ -37,10 +41,13 @@ def get_postgres_conn():
 import pytds
 
 def get_sqlserver_conn():
-    """
     Returns a connection to SQL Server DW using python-tds.
     """
-    host = os.getenv("SQLSERVER_HOST", "localhost")
+    # Detect if running in Airflow (Docker) or Local
+    is_airflow = os.getenv("AIRFLOW_HOME") is not None
+    default_host = "sqlserver_etl" if is_airflow else "localhost"
+
+    host = os.getenv("SQLSERVER_HOST", default_host)
     user = os.getenv("SQLSERVER_USER", "sa")
     password = os.getenv("SQLSERVER_PASSWORD", "BigDataPassword123!")
     database = os.getenv("SQLSERVER_DB", "sales_dw")
