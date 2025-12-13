@@ -6,31 +6,13 @@ import pg8000.dbapi
 from faker import Faker
 from datetime import datetime
 
+from src.common.db import get_postgres_conn
+
 # Configuration
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = int(os.getenv("DB_PORT", "5432"))
-DB_NAME = os.getenv("DB_NAME", "sales_db")
-DB_USER = os.getenv("DB_USER", "sales_user")
-DB_PASS = os.getenv("DB_PASS", "sales_password")
+# Removed manual connection logic
+# DB params are handled by get_postgres_conn
 
 fake = Faker('pt_BR')
-
-def get_db_connection():
-    max_retries = 5
-    for attempt in range(max_retries):
-        try:
-            conn = pg8000.dbapi.connect(
-                host=DB_HOST,
-                database=DB_NAME,
-                user=DB_USER,
-                password=DB_PASS,
-                port=DB_PORT
-            )
-            return conn
-        except Exception as e:
-            print(f"Connection failed (Attempt {attempt+1}/{max_retries}): {e}")
-            time.sleep(5)
-    raise Exception("Could not connect to the database")
 
 def create_initial_products(cursor):
     """Fetches products from Fake Store API or generates them if API fails"""
@@ -112,7 +94,7 @@ def create_order(cursor, customer_id):
 
 def main():
     print("Starting Data Generator...")
-    conn = get_db_connection()
+    conn = get_postgres_conn()
     cur = conn.cursor()
     cur.execute("SET search_path TO sales")
     
