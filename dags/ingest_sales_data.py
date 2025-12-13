@@ -72,7 +72,7 @@ with DAG(
     'ingest_sales_data',
     default_args=default_args,
     description='Ingests sales data from Postgres to Bronze Parquet',
-    schedule_interval='*/30 * * * *', # Every 30 mins
+    schedule='*/30 * * * *', # Every 30 mins
     catchup=False,
     tags=['etl', 'bronze']
 ) as dag:

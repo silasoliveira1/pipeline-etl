@@ -27,7 +27,7 @@ with DAG(
     'process_sales_dw',
     default_args=default_args,
     description='Loads Parquet from Bronze to SQL Server DW',
-    schedule_interval='0 * * * *', # Every hour
+    schedule='0 * * * *', # Every hour
     catchup=False,
     tags=['etl', 'gold']
 ) as dag:
