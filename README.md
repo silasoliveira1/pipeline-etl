@@ -4,11 +4,13 @@ Este repositório contém uma implementação completa de um pipeline de dados (
 
 ## 🏗 Arquitetura
 
-O fluxo de dados segue a arquitetura Medallion (Bronze/Silver/Gold):
+O fluxo de dados segue uma variação da arquitetura Medallion aka **Simplified Medallion** (Bronze -> Gold):
 1.  **Origem (Postgres)**: Banco de dados transacional simulando um e-commerce.
-2.  **Ingestão (Bronze)**: DAG `ingest_sales_data` extrai dados novos incrementalmente para arquivos Parquet no Data Lake local.
-3.  **Processamento (Gold)**: DAG `process_sales_dw` lê os arquivos Parquet, aplica validações de qualidade e carrega no SQL Server (Data Warehouse).
-4.  **Destino (SQL Server)**: Armazena as tabelas Dimensão e Fato para consumo (ex: Power BI).
+2.  **Ingestão (Bronze)**: DAG `ingest_sales_data` extrai dados novos incrementalmente para arquivos Parquet no Data Lake local (Raw Data).
+3.  **Processamento (Gold)**: DAG `process_sales_dw` lê a Bronze, aplica **qualidade e limpeza em memória (Transient Silver)** e carrega diretamente no SQL Server (Data Warehouse).
+4.  **Destino (SQL Server)**: Armazena as tabelas Dimensão e Fato prontas para consumo.
+
+> **Nota de Arquitetura**: Optamos por não persistir a camada *Silver* em disco (Parquet) para reduzir latência e custos de armazenamento, dado que as transformações são leves e o Data Warehouse atua como a camada de verdade única para consumo. A lógica de limpeza ("Silver") é aplicada `in-flight` durante a carga.
 
 ## 🚀 Como Rodar o Projeto
 
